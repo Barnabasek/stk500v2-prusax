@@ -516,7 +516,7 @@ void lcd_print_hex_dword(uint32_t val)
 	lcd_print_hex_word(val >> 16);
 	lcd_print_hex_word(val & 0xffff);
 }
-/**/
+*/
 /*
 const unsigned long ulFlashEnd = FLASHEND;
 const unsigned long ulRamEnd = RAMEND;
@@ -654,7 +654,7 @@ static unsigned char recchar_timeout(void)
 }
 
 #ifdef DUALSERIAL
-void initUart()
+void initUart(void)
 {
 	// init uart0
 	UART_STATUS_REG0	|=	(1 <<UART_DOUBLE_SPEED0);
@@ -690,7 +690,7 @@ void blinkBootLed(int state)
 //Heaters off (PG5=0, PE5=0)
 //Fans on (PH5=1, PH3=1)
 //Motors off (PA4..7=1)
-void pinsToDefaultState()
+void pinsToDefaultState(void)
 {
 /*
     DDRG = 0b00001000;
@@ -708,8 +708,11 @@ void pinsToDefaultState()
 	PORTE &= 0b11011111; //PE5 = 0
 	DDRG |= 0b00100000; //PG5 out
 	PORTG &= 0b11011111; //PG5 = 0
-	DDRH |= 0b00101000; //PH5, PH3 out
+/* 	DDRH |= 0b00101000; //PH5, PH3 out
 	PORTH |= 0b00101000; //PH5, PH3 = 1
+*/
+	DDRH |= 0b00000000; //PH5, PH3 out
+	PORTH |= 0b00000000; //PH5, PH3 = 0
 }
 
 #endif //EINSYBOARD
@@ -799,7 +802,7 @@ int main(void)
 						if (boot_app_flags & BOOT_APP_FLG_FLASH)
 							word = pgm_read_word_far(boot_src_addr); //from FLASH
 						else
-							word = *((uint16_t*)boot_src_addr); //from RAM
+							word = *((long*)boot_src_addr); //from RAM
 						boot_page_fill(address, word);
 						address	+= 2;
 						boot_src_addr += 2;
@@ -910,8 +913,8 @@ int main(void)
     lcd_puts("Prusa Research");
 //    lcd_goto(90);
 //	lcd_puts("boot...    ...");
-    lcd_goto(101);
-	lcd_puts("...");
+    lcd_goto(94);
+	lcd_puts("Loading...");
 
 #endif //LCD_HD44780
 
